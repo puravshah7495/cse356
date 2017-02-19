@@ -1,0 +1,10 @@
+# python
+cse356/*.pyc
+*.pyc
+
+# virtualEnv
+cse356/venv/
+venv/
+
+#uwsgi
+*.sock

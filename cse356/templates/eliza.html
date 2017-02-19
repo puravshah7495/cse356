@@ -1,0 +1,29 @@
+<html>
+	<head>
+		<link href="{{ url_for('static', filename='./eliza.css') }}" type="text/css" rel="stylesheet" />
+		<link href="{{ url_for('static', filename='./bower_components/bootstrap/dist/css/bootstrap.min.css') }}" />
+		<script src="{{ url_for('static', filename='./bower_components/jquery/dist/jquery.min.js') }}"></script>
+		<script src="{{ url_for('static', filename='./eliza.js') }}"></script>
+	</head>
+	<body>
+		{% if not response %}
+			<form action="/eliza" method="post" id="eliza">
+				Name: <input type="text" name="name" />
+				<input type="submit" value="submit" />
+			</form>
+		{% else %}
+			<div class="container">
+				<div class="chat_container" id="chatbox">
+					<div class="bot">
+						<p>{{ response }}</p>
+					</div>
+					<div class="bot">
+						<p>What would you like to talk about today?</p>
+					</div>
+				</div>
+				<input type="text" id="input">
+				<button id="human">Submit</button>
+			</div>
+		{% endif %}
+	</body>
+</html>
