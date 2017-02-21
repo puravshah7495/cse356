@@ -10,3 +10,7 @@
             dest: /var/www/cse356
             update: yes
             version: master
+      - name: Move Hw0.html
+        shell: cp /var/www/cse356/hw0.html /usr/share/nginx/html/
+      - name: Restart Nginx
+        service: name=nginx state=restarted
