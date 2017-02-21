@@ -1,0 +1,12 @@
+- hosts: web
+  tasks:
+      - name: Install Nginx
+        apt: pkg=nginx state=installed update_cache=true
+      - name: Install Git
+        apt: pkg=git state=installed update_cache=true
+      - name: Git Pull
+        git:
+            repo: git://github.com/puravshah7495/cse356.git
+            dest: /var/www/cse356
+            update: yes
+            version: master
