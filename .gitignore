@@ -8,3 +8,10 @@ venv/
 
 #uwsgi
 *.sock
+
+#IDES
+.vscode
+.intelij
+
+#ansible
+*.retry
