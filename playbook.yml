@@ -1,0 +1,46 @@
+---
+- hosts: server
+  become: yes
+  become_method: sudo
+  tasks:
+    - name: Update cache
+      apt: update_cache=yes
+    - name: Install items
+      apt: name={{ item }} state=latest
+      with_items:
+        - git
+        - nginx
+        - mysql-server
+        - python-pip
+        - python-dev
+    - name: clone project
+      git:
+        repo: git://github.com/puravshah7495/cse356.git
+        dest: /var/www/cse356
+        update: yes
+        version: master
+        depth: 1
+    - name: Install virtualenv
+      pip:
+        name: virtualenv
+    - name: Install flask
+      pip:
+        name: flask
+        virtualenv: /var/www/cse356/venv
+    - name: Intall uwsgi
+      pip:
+        name: uwsgi
+        virtualenv: /var/www/cse356/venv
+    - name: curl node
+      shell: 'curl -sL https://deb.nodesource.com/setup_7.x | sudo -E bash -'
+      notify:
+        - Install nodejs
+    - name: Install Node Packages
+      npm:
+        path:/var/www/cse356
+  handlers:
+    - name: Install nodejs
+      apt: name={{ item }} state=latest
+      with_items:
+        - nodejs
+        - build-essential 
