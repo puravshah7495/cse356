@@ -37,10 +37,10 @@
         - Install nodejs
     - name: Install Node Packages
       npm:
-        path:/var/www/cse356
+        path: /var/www/cse356
   handlers:
     - name: Install nodejs
-      apt: name={{ item }} state=latest
+      apt: name={{ item }} state=present
       with_items:
         - nodejs
         - build-essential 
