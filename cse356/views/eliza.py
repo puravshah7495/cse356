@@ -15,8 +15,34 @@ def eliza():
 
 @elizaModule.route('/eliza/DOCTOR/', methods=['POST'])
 def doctor():
-	phrases = ['I don\'t understand, please elaborate.', 'That\'s interesting', 'Tell me more about that',
-				'Are you sure?', 'How does that make you feel?', 'And why is that?']
+	phrases = ['I don\'t understand, please elaborate.', 
+				'That\'s interesting', 
+				'Tell me more about that',
+				'Are you sure?', 
+				"Can you elaborate on that?",
+				"Oh, I see.",
+				"And how does that make you feel?",
+				"What does that make you feel?",
+				"Why?",
+				"What else?",
+				"What about it?",
+				"That sounds interesting.",
+				"Can you tell me more?"]
+	
+	question = ["What do you think the answer is?",
+					"I'll be asking the questions here.",
+					"What is the answer?",
+					"I can't answer that.",
+					"Find the answer yourself.",
+					"Think about your question carefully.",
+					"Why do you ask that?"]
+
+	you =  ["I'm more interested in you.",
+				"Tell me more about yourself instead.",
+				"I'm here for you.",
+				"I'm not that important here.",
+				"Let's talk more about yourself.",
+				"Tell me more about yourself."]
 
 	print request.values
 	if len(request.values) != 0:
@@ -29,9 +55,11 @@ def doctor():
 		if not humanInput:
 			response = "Please say something"
 		elif humanInput.find('you') != -1:
-			response = "We're here to talk about you not me"
+			random.choice(you)
 		elif humanInput.find('I feel') != -1:
 			response = "And why do you feel that way?"
+		elif humanInput.find('?') != -1:
+			response = random.choice(question)
 		else:
 			response = random.choice(phrases)
 
