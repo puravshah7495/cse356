@@ -31,6 +31,14 @@
       pip:
         name: uwsgi
         virtualenv: /var/www/cse356/venv
+    - name: Install SQLAlchemy
+      pip:
+        name: flask-sqlalchemy
+        virtualenv: /var/www/cse356/venv
+    - name: Install pymysql
+      pip:
+        name: pymysql
+        virtualenv: /var/www/cse356/venv
     - name: curl node
       shell: 'curl -sL https://deb.nodesource.com/setup_7.x | sudo -E bash -'
       notify:
