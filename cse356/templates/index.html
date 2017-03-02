@@ -3,6 +3,11 @@
         <title>CSE 356</title>
     </head>
     <body>
+        {% if session.loggedIn %}
+            <p>Welcome {{ session.username }}</p><br />
+        {% else %}
+            <a href="/login">Login</a><br />
+        {% endif %}
         <a href="/hw0.html">HW 0</a>
         <br />
         <a href="/eliza">Eliza</a>
