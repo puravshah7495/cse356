@@ -32,6 +32,7 @@ class Conversations(db.Model):
 	__tablename__ = 'conversations'
 	id = db.Column(db.Integer, primary_key=True)
 	user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+	start_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
 	user = db.relationship('User', backref='conversation')
 
@@ -43,7 +44,7 @@ class Messages(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	conversation_id = db.Column(db.Integer, db.ForeignKey('conversations.id'))
 	text = db.Column(db.String(255), nullable=False)
-	date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+	timestamp = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
 	conversation = db.relationship('Conversations', backref='message')
 
