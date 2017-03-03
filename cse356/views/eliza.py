@@ -13,6 +13,7 @@ def eliza():
 		date = time.strftime("%m/%d/%Y")
 		return render_template('eliza/eliza.html',response="Hello %s, today's date is %s" % (name, date))
 
+@elizaModule.route('/DOCTOR', methods=['POST'])
 @elizaModule.route('/eliza/DOCTOR/', methods=['POST'])
 def doctor():
 	phrases = ['I don\'t understand, please elaborate.', 

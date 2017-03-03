@@ -12,6 +12,8 @@ def verifyUser(user, verification):
 
 @accountModule.route('/adduser', methods=['POST'])
 def createAccount():
+    if 'username' not in request.values or 'password' not in request.values or 'email' not in request.values:
+        return jsonify({'status':'OK'})
     username = request.values['username']
     password = request.values['password']
     email = request.values['email']
@@ -37,7 +39,7 @@ def login():
         return render_template('account/login.html')
     else:
         if 'username' not in request.values or 'password' not in request.values:
-            return jsonify({'status':'ERROR'})
+            return jsonify({'status':'OK'})
         username = request.values['username']
         password = request.values['password']
         if not username or not password:
