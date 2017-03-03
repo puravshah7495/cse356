@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, session, make_response, jsonify
-from models import db, User, VerifyKeys, Messages, Conversations
+from cse356.models import db, User, VerifyKeys, Messages, Conversations
 
 accountModule = Blueprint("accountModule",__name__)
 
@@ -38,6 +38,8 @@ def login():
     else:
         username = request.values['username']
         password = request.values['password']
+        if not username or not password:
+            return jsonify({'status': 'ERROR'})
         user = User.query.filter_by(username=username, password=password).first()
         if user:
             session['loggedIn'] = True
