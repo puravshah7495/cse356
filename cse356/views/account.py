@@ -36,6 +36,8 @@ def login():
     if request.method == 'GET':
         return render_template('account/login.html')
     else:
+        if 'username' not in request.values or 'password' not in request.values:
+            return jsonify({'status':'ERROR'})
         username = request.values['username']
         password = request.values['password']
         if not username or not password:
