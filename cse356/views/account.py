@@ -1,7 +1,14 @@
 from flask import Blueprint, render_template, request, redirect, session, make_response, jsonify
+import json
 from cse356.models import db, User, VerifyKeys, Messages, Conversations
 
 accountModule = Blueprint("accountModule",__name__)
+
+def getRequestData(request):
+    if request.get_json():
+        return request.get_json()
+    else:
+        return request.values
 
 def verifyUser(user, verification):
     user.verified = True
@@ -12,8 +19,9 @@ def verifyUser(user, verification):
 
 @accountModule.route('/adduser', methods=['POST'])
 def createAccount():
-    if 'username' not in request.values or 'password' not in request.values or 'email' not in request.values:
-        return jsonify({'status':'OK'})
+    data = getRequestData(request)
+    if 'username' not in data or 'password' not in data or 'email' not in data:
+        return jsonify({'status':'ERROR'})
     username = request.values['username']
     password = request.values['password']
     email = request.values['email']
@@ -25,23 +33,26 @@ def createAccount():
 
 @accountModule.route('/verify', methods=['POST'])
 def verify():
-    email = request.values['email']
-    key = request.values['key']
+    data = getRequestData(request)
+    email = data['email']
+    key = data['key']
     user = User.query.filter_by(email=email).first()
     verification = VerifyKeys.query.join(User, User.id==VerifyKeys.user_id).filter(User.email == email).filter(VerifyKeys.emailed_key == key).first()
     if key == 'abracadabra' or verification:
         verifyUser(user, verification)
-        return jsonify({'status':'OK'})       
+        return jsonify({'status':'OK'})    
+    return jsonify({'status':'ERROR'})   
 
 @accountModule.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'GET':
         return render_template('account/login.html')
     else:
-        if 'username' not in request.values or 'password' not in request.values:
-            return jsonify({'status':'OK'})
-        username = request.values['username']
-        password = request.values['password']
+        data = getRequestData(request)
+        if 'username' not in data or 'password' not in data:
+            return jsonify({'status':'ERROR'})
+        username = data['username']
+        password = data['password']
         if not username or not password:
             return jsonify({'status': 'ERROR'})
         user = User.query.filter_by(username=username, password=password).first()
