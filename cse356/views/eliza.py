@@ -1,4 +1,6 @@
-from flask import Blueprint, render_template, request, jsonify
+from flask import Blueprint, render_template, request, jsonify, session
+from cse356.models import db, Messages, Conversations, Users
+from cse356.views.account import getRequestData
 import time
 import random
 
@@ -16,6 +18,20 @@ def eliza():
 @elizaModule.route('/DOCTOR', methods=['POST'])
 @elizaModule.route('/eliza/DOCTOR/', methods=['POST'])
 def doctor():
+	username = None
+	conversationId = None
+	if session.get('loggedIn'):
+		username = session.get('username')
+		user = Users.query.filter_by(username=username).first()
+		if session.get('elizaSession'):
+			conversationId = session.get('elizaSession')
+		else:
+			conversation = Conversations(user.id)
+			db.session.add(conversation)
+			db.session.commit()
+			session['elizaSession'] = conversation.id
+			conversationId = conversation.id
+
 	phrases = ['I don\'t understand, please elaborate.', 
 				'That\'s interesting', 
 				'Tell me more about that',
@@ -44,14 +60,11 @@ def doctor():
 				"I'm not that important here.",
 				"Let's talk more about yourself.",
 				"Tell me more about yourself."]
-
-	print request.values
-	if len(request.values) != 0:
-		print "here1"
-		if 'human' not in request.values:
-			print "here"
+	data = getRequestData(request)
+	if len(data) != 0:
+		if 'human' not in data:
 			return jsonify(eliza="")
-		humanInput = request.values['human']
+		humanInput = data['human']
 		response = "And how does that make you feel?"
 		if not humanInput:
 			response = "Please say something"
@@ -63,7 +76,13 @@ def doctor():
 			response = random.choice(question)
 		else:
 			response = random.choice(phrases)
-
+		if session.get('loggedIn'):
+			print user
+			userMessage = Messages(conversationId, humanInput, username)
+			elizaMessage = Messages(conversationId, response, 'Eliza')
+			db.session.add(userMessage)
+			db.session.add(elizaMessage)
+			db.session.commit()
 		return jsonify(eliza=response)
 	else:
 		return jsonify(eliza="")

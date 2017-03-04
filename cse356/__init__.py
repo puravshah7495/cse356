@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, jsonify
 import time
 import random
 
-from models import User, VerifyKeys, Conversations, Messages, db, create_app
+from models import Users, VerifyKeys, Conversations, Messages, db, create_app
 from views.eliza import elizaModule
 from views.account import accountModule
 

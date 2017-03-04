@@ -4,7 +4,7 @@ from datetime import datetime
 
 db = SQLAlchemy()
 
-class User(db.Model):
+class Users(db.Model):
 	__tablename__ = 'users'
 	id = db.Column(db.Integer, primary_key=True)
 	username = db.Column(db.String(20), nullable=False, unique=True)
@@ -22,7 +22,7 @@ class VerifyKeys(db.Model):
 	user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
 	emailed_key = db.Column(db.String(100))
 
-	user = db.relationship('User', backref='verifykey')
+	user = db.relationship('Users', backref='verifykey')
 
 	def __init__(self, user_id, emailed_key):
 		self.user_id = user_id
@@ -34,23 +34,38 @@ class Conversations(db.Model):
 	user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 	start_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
-	user = db.relationship('User', backref='conversation')
+	user = db.relationship('Users', backref='conversation')
 
 	def __init__(self, user_id):
 		self.user_id = user_id
+
+	def serialize(self):
+		return {
+			'id': self.id,
+			'start_date': self.start_date
+		}
 
 class Messages(db.Model):
 	__tablename__ = 'messages'
 	id = db.Column(db.Integer, primary_key=True)
 	conversation_id = db.Column(db.Integer, db.ForeignKey('conversations.id'))
 	text = db.Column(db.String(255), nullable=False)
+	name = db.Column(db.String(20), nullable=False)
 	timestamp = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
 	conversation = db.relationship('Conversations', backref='message')
 
-	def __init__(self, conversation_id, text):
-		this.conversation_id = conversation_id
-		this.text = text
+	def __init__(self, conversation_id, text, name):
+		self.conversation_id = conversation_id
+		self.text = text
+		self.name = name
+	
+	def serialize(self):
+		return {
+			'timestamp': self.timestamp,
+			'name': self.name,
+			'text': self.text
+		}
 
 def create_app():
 	app = Flask(__name__)
