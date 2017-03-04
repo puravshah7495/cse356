@@ -84,4 +84,12 @@ def listConv():
 
 @accountModule.route('/getconv', methods=['POST'])
 def getConv():
-    return None
+    if session.get('loggedIn'):
+    	data = getRequestData(request)
+    	if 'id' not in data:
+        	return jsonify({'status':'ERROR'})
+    	id = data['id']
+    	conv = Messages.query.filter_by(conversation_id = id).all()
+    	return jsonify({'status':'OK', 'conversation':conv})
+    else:
+    	return jsonify({'status':'ERROR'})
