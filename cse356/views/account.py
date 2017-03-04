@@ -73,10 +73,15 @@ def logout():
     else:
         return jsonify({'status':'ERROR'}) 
 
-@accountModule.route('/listconv')
+@accountModule.route('/listconv', methods=['POST'])
 def listConv():
-    return None
+    if session.get('loggedIn'):
+        userId = session.get('userId')
+        conv = Conversations.query.filter_by(user_id = userId).all()
+        return jsonify({'status':'OK', "conversations":conv})
+    else:
+        return jsonify({'status':'ERROR'})
 
-@accountModule.route('/getconv')
+@accountModule.route('/getconv', methods=['POST'])
 def getConv():
     return None
