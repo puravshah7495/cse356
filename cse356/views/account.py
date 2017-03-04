@@ -22,9 +22,9 @@ def createAccount():
     data = getRequestData(request)
     if 'username' not in data or 'password' not in data or 'email' not in data:
         return jsonify({'status':'ERROR'})
-    username = request.values['username']
-    password = request.values['password']
-    email = request.values['email']
+    username = data['username']
+    password = data['password']
+    email = data['email']
     newUser = User(username, password, email)
     db.session.add(newUser)
     db.session.commit()
